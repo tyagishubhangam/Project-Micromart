@@ -13,7 +13,7 @@ import java.util.List;
 @EnableWebMvc
 @RestController
 @CrossOrigin(origins = "http://127.0.0.1:5500")
-@RequestMapping("/api/micromart")
+@RequestMapping("/api/micromart/product")
 public class ProductController {
 
     ProductService productService;
