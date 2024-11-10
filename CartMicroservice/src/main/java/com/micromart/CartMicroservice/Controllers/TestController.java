@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/micromart/user/{userId}")
+@RequestMapping("/api/micromart/cart/user/{userId}")
 public class TestController {
     public final TestCartService testService;
     private final UserMicroserviceClient userMicroserviceClient;
@@ -22,7 +22,7 @@ public class TestController {
         this.productMicroserviceClient = productMicroserviceClient;
     }
 
-    @GetMapping("/cart")
+    @GetMapping("/getCart")
     public ResponseEntity<TestDisplayCart> getCart(@PathVariable("userId") long userId){
       try{
           if(userMicroserviceClient.getUser(userId) == null){
@@ -51,7 +51,7 @@ public class TestController {
         }
     }
 
-    @DeleteMapping("/cart/delete/product/{productId}")
+    @DeleteMapping("/delete/product/{productId}")
     public ResponseEntity<String> deleteProductFromCart(@PathVariable("userId") long userId, @PathVariable("productId") long productId){
         try{
             if(userMicroserviceClient.getUser(userId) == null){
@@ -69,7 +69,7 @@ public class TestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    @PutMapping("/cart/product/{productId}/updateQuantity/{quantity}")
+    @PutMapping("/product/{productId}/updateQuantity/{quantity}")
     public ResponseEntity<String> updateCart(@PathVariable("userId") long userId, @PathVariable("productId") long productId, @PathVariable("quantity") int quantity){
         try {
             if(userMicroserviceClient.getUser(userId) == null){
