@@ -2,6 +2,7 @@ package com.micromart.UserMicroservice.controllers;
 
 import com.micromart.UserMicroservice.services.UserService;
 import com.micromart.UserMicroservice.user.User;
+import com.micromart.UserMicroservice.userjwt.JWTService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +13,10 @@ import java.util.List;
 @RequestMapping("api/micromart/user")
 public class UserController {
     private final UserService userService;
-    public UserController(UserService userService) {
+    private final JWTService jwtService;
+    public UserController(UserService userService, JWTService jwtService) {
         this.userService = userService;
+        this.jwtService = jwtService;
     }
     @GetMapping("/getAll")
     public ResponseEntity<List<User>> getAll() {
@@ -40,5 +43,15 @@ public class UserController {
             return ResponseEntity.ok("User deleted successfully");
         }
         return new ResponseEntity<>( HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/greet")
+    public ResponseEntity<String> greet() {
+        return ResponseEntity.ok("Hello World");
+    }
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody User user) {
+        String token = jwtService.generateToken(user.getUsername());
+        return ResponseEntity.ok(token);
     }
 }
