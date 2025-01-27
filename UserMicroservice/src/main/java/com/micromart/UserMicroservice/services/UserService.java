@@ -9,4 +9,5 @@ public interface UserService {
     public List<User> getAllUsers();
     public User getUser(Long id);
     public boolean deleteUser(Long id);
+    public User getUserByUsername(String username);
 }

@@ -2,6 +2,7 @@ package com.micromart.UserMicroservice.services;
 
 import com.micromart.UserMicroservice.repositories.UserRepo;
 import com.micromart.UserMicroservice.user.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,11 +10,15 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
+
     public UserServiceImpl(UserRepo userRepo) {
         this.userRepo = userRepo;
     }
     @Override
     public void registerUser(User user) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+        user.setPassword(encoder.encode(user.getPassword()));
+        System.out.println(user.getPassword());
         userRepo.save(user);
     }
 
@@ -34,5 +39,10 @@ public class UserServiceImpl implements UserService {
             return true;
         }
          return false;
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return userRepo.findByUsername(username);
     }
 }
