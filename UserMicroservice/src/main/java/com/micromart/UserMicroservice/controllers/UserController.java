@@ -49,9 +49,9 @@ public class UserController {
     public ResponseEntity<String> greet() {
         return ResponseEntity.ok("Hello World");
     }
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) {
-        String token = jwtService.generateToken(user.getUsername());
-        return ResponseEntity.ok(token);
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<String> login(@RequestBody User user) {
+//        String token = jwtService.generateToken(user.getUsername());
+//        return ResponseEntity.ok(token);
+//    }
 }
