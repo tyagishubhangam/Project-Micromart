@@ -44,7 +44,7 @@ public class SecurityConfig  {
         customAuthenticationFilter.setFilterProcessesUrl("/api/micromart/user/login");
         http.csrf(customizer -> customizer.disable())
                 .headers(headers-> headers.frameOptions(f -> f.sameOrigin()));
-        http.authorizeHttpRequests(request -> request.requestMatchers("api/micromart/user/signup","api/micromart/user/greet","/h2-console/**","api/micromart/user/login")
+        http.authorizeHttpRequests(request -> request.requestMatchers("api/micromart/user/signup","api/micromart/user/greet","/h2-console/**","api/micromart/user/login","/swagger-ui/**","/v3/api-docs/**")
         .permitAll().anyRequest().authenticated()
         )
 
