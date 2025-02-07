@@ -27,10 +27,21 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // Bypass JWT validation for signup and greet endpoints
-        if (request.getRequestURI().equals("/api/micromart/user/signup") || request.getRequestURI().equals("/api/micromart/user/greet") || request.getRequestURI().equals("/api/micromart/user/login") || request.getRequestURI().startsWith("/h2-console")) {
-            filterChain.doFilter(request, response);
-            return; // Skip further processing
-        }
+        String[] permittedUris = {
+                "/api/micromart/user/signup",
+                "/api/micromart/user/greet",
+                "/api/micromart/user/login",
+                "/h2-console",
+                "/swagger-ui",
+                "/swagger-resources/**",
+                "/v3/api-docs"
+        };
+       for (String uri : permittedUris) {
+           if (request.getRequestURI().startsWith(uri)) {
+               filterChain.doFilter(request, response);
+               return;
+           }
+       }
 
         String authHeader = request.getHeader("Authorization");
         String jwtToken = null;
