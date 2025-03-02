@@ -1,14 +1,9 @@
-package com.micromart.UserMicroservice.user;
+package com.micromart.UserMicroservice.dtos;
 
-import jakarta.persistence.*;
 import lombok.Data;
 
-@Entity(name = "myUser")
 @Data
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class SignupRequest {
     private String username;
     private String password;
     private String firstName;
@@ -16,8 +11,5 @@ public class User {
     private String email;
     private String phone;
     private String address;
-    private String provider;
     private String profilePicUrl;
-
-
 }

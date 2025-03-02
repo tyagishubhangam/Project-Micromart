@@ -20,9 +20,9 @@ public class PrincipalUserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User myUser =  userService.getUserByUsername(username);
-        log.info("User found with username: " + myUser.getUsername());
+
         if (myUser == null) {
-//            log.error("User not found with username: " + username);
+            log.error("User not found with username: " + username);
             throw new UsernameNotFoundException(username);
         }
         return new UserPrincipal(myUser);

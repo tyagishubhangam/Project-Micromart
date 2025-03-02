@@ -1,30 +1,32 @@
 package com.micromart.UserMicroservice.controllers;
 
+import com.micromart.UserMicroservice.dtos.SignupRequest;
+import com.micromart.UserMicroservice.dtos.mappers.SignupRequestMapper;
 import com.micromart.UserMicroservice.services.UserService;
 import com.micromart.UserMicroservice.user.User;
 import com.micromart.UserMicroservice.userjwt.JWTService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("api/micromart/user")
 public class UserController {
     private final UserService userService;
     private final JWTService jwtService;
-    public UserController(UserService userService, JWTService jwtService) {
-        this.userService = userService;
-        this.jwtService = jwtService;
-    }
+    private final SignupRequestMapper signupRequestMapper;
+
     @GetMapping("/getAll")
     public ResponseEntity<List<User>> getAll() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody User user) {
+    public ResponseEntity<String> signup(@RequestBody SignupRequest signupRequest) {
+        User user = signupRequestMapper.mapToUser(signupRequest);
         userService.registerUser(user);
         return ResponseEntity.ok("User registered successfully");
     }

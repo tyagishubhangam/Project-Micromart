@@ -34,7 +34,9 @@ public class JWTFilter extends OncePerRequestFilter {
                 "/h2-console",
                 "/swagger-ui",
                 "/swagger-resources/**",
-                "/v3/api-docs"
+                "/v3/api-docs",
+                "/api/auth/google",
+                "/oauth2"
         };
        for (String uri : permittedUris) {
            if (request.getRequestURI().startsWith(uri)) {
@@ -51,12 +53,16 @@ public class JWTFilter extends OncePerRequestFilter {
             jwtToken = authHeader.substring(7);
             username = jwtService.extractUsername(jwtToken);
         }
-        UserDetails userDetails = applicationContext.getBean(PrincipalUserService.class).loadUserByUsername(username);
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            if(jwtService.validateToken(jwtToken, userDetails)){
+
+        if(username != null)
+        {
+            UserDetails userDetails = applicationContext.getBean(PrincipalUserService.class).loadUserByUsername(username);
+            if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                if(jwtService.validateToken(jwtToken, userDetails)){
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
             }
         }
         filterChain.doFilter(request, response);
