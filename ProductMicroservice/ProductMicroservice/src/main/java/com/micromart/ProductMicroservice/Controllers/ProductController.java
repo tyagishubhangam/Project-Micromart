@@ -2,6 +2,7 @@ package com.micromart.ProductMicroservice.Controllers;
 
 import com.micromart.ProductMicroservice.Product.Product;
 import com.micromart.ProductMicroservice.ProductService.ProductService;
+import com.micromart.ProductMicroservice.dto.ProductAddRequest;
 import com.micromart.ProductMicroservice.dto.ProductWithReviewDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @EnableWebMvc
 @RestController
-@CrossOrigin(origins = "http://127.0.0.1:5500")
+@CrossOrigin
 @RequestMapping("/api/micromart/product")
 public class ProductController {
 
@@ -23,7 +24,7 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> addProduct(@RequestBody Product product) {
+    public ResponseEntity<String> addProduct(@RequestBody ProductAddRequest product) {
         productService.addProduct(product);
         return ResponseEntity.ok("Product added Successfully");
     }

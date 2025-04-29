@@ -57,6 +57,7 @@ package com.micromart.ProductMicroservice.ProductService;//package com.micromart
 import com.micromart.ProductMicroservice.Product.Product;
 import com.micromart.ProductMicroservice.ProductService.ProductService;
 import com.micromart.ProductMicroservice.clients.ReviewClient;
+import com.micromart.ProductMicroservice.dto.ProductAddRequest;
 import com.micromart.ProductMicroservice.dto.ProductWithReviewDto;
 import com.micromart.ProductMicroservice.mappers.ProductWithReviewMapper;
 import com.micromart.ProductMicroservice.repositories.ProductRepo;
@@ -78,7 +79,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void addProduct(Product product) {
+    public void addProduct(ProductAddRequest productRequest) {
+        Product product = Product.builder().productName(productRequest.getProductName()).productDescription(productRequest.getProductDescription())
+                .category(productRequest.getCategory()).price(productRequest.getPrice()).quantity(productRequest.getQuantity())
+                .image(productRequest.getImage()).build();
+
         productRepo.save(product);
     }
 

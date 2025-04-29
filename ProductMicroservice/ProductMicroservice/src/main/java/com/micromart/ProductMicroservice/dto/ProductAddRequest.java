@@ -1,28 +1,15 @@
 package com.micromart.ProductMicroservice.dto;
 
-import com.micromart.ProductMicroservice.external.Review;
 import lombok.Data;
 
-import java.util.List;
 @Data
-public class ProductWithReviewDto {
+public class ProductAddRequest {
 
-//    private Long id;
     private String productName;
     private String productDescription;
-    //TODO: Add Category Name
+    //    TODO: Add Category Name
     private String category;
     private double price;
     private int quantity;
     private String image;
-
-    private List<Review> reviews;
-
-
-
-
-
-
-
-
 }
