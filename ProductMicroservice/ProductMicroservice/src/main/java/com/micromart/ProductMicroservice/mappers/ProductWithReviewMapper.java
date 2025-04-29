@@ -18,12 +18,13 @@ public class ProductWithReviewMapper {
 
     public ProductWithReviewDto mapToDto(Product product) {
         ProductWithReviewDto productWithReviewDto = new ProductWithReviewDto();
-        productWithReviewDto.setId(product.getId());
+//        productWithReviewDto.setId(product.getId());
         productWithReviewDto.setProductName(product.getProductName());
         productWithReviewDto.setProductDescription(product.getProductDescription());
         productWithReviewDto.setPrice(product.getPrice());
         productWithReviewDto.setQuantity(product.getQuantity());
         productWithReviewDto.setImage(product.getImage());
+        productWithReviewDto.setCategory(product.getCategory());
         try{
         productWithReviewDto.setReviews(reviewClient.getReviews(product.getId()));}
         catch(FeignException.FeignClientException e){
