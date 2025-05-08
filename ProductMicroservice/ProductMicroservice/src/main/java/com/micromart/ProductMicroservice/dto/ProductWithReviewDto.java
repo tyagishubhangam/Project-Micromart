@@ -1,5 +1,6 @@
 package com.micromart.ProductMicroservice.dto;
 
+import com.micromart.ProductMicroservice.category.Category;
 import com.micromart.ProductMicroservice.external.Review;
 import lombok.Data;
 
@@ -7,10 +8,9 @@ import java.util.List;
 @Data
 public class ProductWithReviewDto {
 
-//    private Long id;
+    private Long id;
     private String productName;
     private String productDescription;
-    //TODO: Add Category Name
     private String category;
     private double price;
     private int quantity;

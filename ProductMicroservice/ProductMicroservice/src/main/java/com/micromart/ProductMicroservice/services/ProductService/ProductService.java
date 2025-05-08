@@ -15,7 +15,7 @@ public interface ProductService {
     public ProductWithReviewDto getProductById(Long id);
     public boolean deleteProduct(Long id);
     public boolean updateProduct(Product product);
-    public String uploadProductImage(MultipartFile file) throws Exception;
+    public List<ProductCard> getProductCardsByCategory(String categoryName);
     public List<ProductCard> getAllProductCards();
 
 }

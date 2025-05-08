@@ -1,6 +1,7 @@
 package com.micromart.ProductMicroservice.mappers;
 
 import com.micromart.ProductMicroservice.Product.Product;
+import com.micromart.ProductMicroservice.category.Category;
 import com.micromart.ProductMicroservice.clients.ReviewClient;
 import com.micromart.ProductMicroservice.dto.ProductWithReviewDto;
 import com.micromart.ProductMicroservice.external.Review;
@@ -20,13 +21,14 @@ public class ProductWithReviewMapper {
 
     public ProductWithReviewDto mapToDto(Product product) {
         ProductWithReviewDto productWithReviewDto = new ProductWithReviewDto();
-//        productWithReviewDto.setId(product.getId());
+//        Category category = product.getCategory();
+        productWithReviewDto.setId(product.getId());
         productWithReviewDto.setProductName(product.getProductName());
         productWithReviewDto.setProductDescription(product.getProductDescription());
         productWithReviewDto.setPrice(product.getPrice());
         productWithReviewDto.setQuantity(product.getQuantity());
         productWithReviewDto.setImage(product.getImage());
-        productWithReviewDto.setCategory(product.getCategory());
+        productWithReviewDto.setCategory(product.getCategory().getCategoryName());
         try{
         productWithReviewDto.setReviews(reviewClient.getReviews(product.getId()));}
         catch(Exception e){

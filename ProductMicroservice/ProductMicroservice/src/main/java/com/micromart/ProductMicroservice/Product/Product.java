@@ -1,9 +1,7 @@
 package com.micromart.ProductMicroservice.Product;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.micromart.ProductMicroservice.category.Category;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +19,9 @@ public class Product {
     private String productName;
     private String productDescription;
 //    TODO: Add Category Name
-    private String category;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
     private double price;
     private int quantity;
     private String image;

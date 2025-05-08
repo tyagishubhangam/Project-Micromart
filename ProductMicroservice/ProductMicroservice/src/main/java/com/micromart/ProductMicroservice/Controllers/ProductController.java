@@ -32,7 +32,6 @@ public class ProductController {
     @PostMapping("/add")
     public ResponseEntity<String> addProduct(@RequestPart ProductAddRequest product, @RequestPart("image") MultipartFile imageFile) throws Exception {
        try{
-//           String imageUrl = productService.uploadProductImage(imageFile);
            String imageUrl = cloudinaryService.upload(imageFile);
 
            product.setImage(imageUrl);
@@ -77,7 +76,20 @@ public class ProductController {
     }
 
     @GetMapping("/getCards")
-    public ResponseEntity<List<ProductCard>> getProductsCards(){
-           return new ResponseEntity<>(productService.getAllProductCards(), HttpStatus.OK);
+    public ResponseEntity<List<ProductCard>> getProductsCards(@RequestParam(value = "category", required = false) String categoryName) {
+        if (categoryName == null) {
+            return new ResponseEntity<>(productService.getAllProductCards(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(productService.getProductCardsByCategory(categoryName), HttpStatus.OK);
+
     }
+
+//    @GetMapping("/getCards/{categoryId}")
+//    public ResponseEntity<List<ProductCard>> getProductsCardsByCategory(@PathVariable("categoryId") long categoryId){
+//        List<ProductCard> response = productService.getProductCardsByCategoryId(categoryId);
+//        if (response.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        return ResponseEntity.ok(response);
+//    }
 }

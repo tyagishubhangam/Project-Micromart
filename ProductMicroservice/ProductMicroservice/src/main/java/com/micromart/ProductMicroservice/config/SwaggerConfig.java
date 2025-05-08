@@ -9,13 +9,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
-    @Bean
-    public GroupedOpenApi api() {
-        return GroupedOpenApi.builder()
-                .group("Product-Microservice-API")
-                .pathsToMatch("/api/micromart/product/**")
-                .build();
-    }
+//    @Bean
+//    public GroupedOpenApi api() {
+//        return GroupedOpenApi.builder()
+//                .group("Product-Microservice-API")
+//                .pathsToMatch("/api/micromart/product/**")
+//                .build();
+//    }
 
     @Bean
     public OpenAPI customOpenAPI() {
