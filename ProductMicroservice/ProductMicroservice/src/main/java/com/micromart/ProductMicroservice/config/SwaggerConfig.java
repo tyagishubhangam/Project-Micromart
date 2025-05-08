@@ -19,6 +19,10 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        return new OpenAPI().info(new Info().title("Product Microservice").version("1.0"));
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Product Microservice")
+                        .description("Product Microservice Api Documentation")
+                .version("1.0"));
     }
 }

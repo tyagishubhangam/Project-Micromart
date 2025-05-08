@@ -1,4 +1,4 @@
-package com.micromart.ProductMicroservice.ProductService;//package com.micromart.ProductMicroservice.ProductService;
+package com.micromart.ProductMicroservice.services.ProductService;//package com.micromart.ProductMicroservice.ProductService;
 //
 //import com.micromart.ProductMicroservice.Product.Product;
 //import org.springframework.stereotype.Service;
@@ -55,7 +55,6 @@ package com.micromart.ProductMicroservice.ProductService;//package com.micromart
 
 
 import com.micromart.ProductMicroservice.Product.Product;
-import com.micromart.ProductMicroservice.ProductService.ProductService;
 import com.micromart.ProductMicroservice.clients.ReviewClient;
 import com.micromart.ProductMicroservice.dto.ProductAddRequest;
 import com.micromart.ProductMicroservice.dto.ProductCard;
@@ -73,7 +72,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;

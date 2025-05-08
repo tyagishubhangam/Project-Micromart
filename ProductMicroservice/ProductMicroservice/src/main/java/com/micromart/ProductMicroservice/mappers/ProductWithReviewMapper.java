@@ -5,10 +5,12 @@ import com.micromart.ProductMicroservice.clients.ReviewClient;
 import com.micromart.ProductMicroservice.dto.ProductWithReviewDto;
 import com.micromart.ProductMicroservice.external.Review;
 import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+@Slf4j
 @Component
 public class ProductWithReviewMapper {
     public final ReviewClient reviewClient;
@@ -27,7 +29,8 @@ public class ProductWithReviewMapper {
         productWithReviewDto.setCategory(product.getCategory());
         try{
         productWithReviewDto.setReviews(reviewClient.getReviews(product.getId()));}
-        catch(FeignException.FeignClientException e){
+        catch(Exception e){
+            log.error(e.getMessage());
             productWithReviewDto.setReviews(new ArrayList<>());
         }
         return productWithReviewDto;

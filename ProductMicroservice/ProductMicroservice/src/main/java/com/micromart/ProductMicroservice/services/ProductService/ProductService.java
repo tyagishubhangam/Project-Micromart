@@ -1,4 +1,4 @@
-package com.micromart.ProductMicroservice.ProductService;
+package com.micromart.ProductMicroservice.services.ProductService;
 
 import com.micromart.ProductMicroservice.Product.Product;
 import com.micromart.ProductMicroservice.dto.ProductAddRequest;
