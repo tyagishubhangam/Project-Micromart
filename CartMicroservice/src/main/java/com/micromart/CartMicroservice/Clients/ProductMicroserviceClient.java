@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "ProductMicroservice", url = "${ProductMicroservice.url}")
 public interface ProductMicroserviceClient {
-    @GetMapping("/get")
-    Product getProduct(@RequestParam("id") Long id);
+    @GetMapping("/get/{id}")
+    Product getProduct(@PathVariable("id") Long id);
 }

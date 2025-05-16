@@ -1,7 +1,7 @@
 package com.micromart.CartMicroservice.CartService;
 
 
-import com.micromart.CartMicroservice.Cart.TestCart;
+import com.micromart.CartMicroservice.Cart.CartItem;
 import com.micromart.CartMicroservice.Cart.TestDisplayCart;
 import com.micromart.CartMicroservice.Clients.UserMicroserviceClient;
 import com.micromart.CartMicroservice.dtos.ProductInCart;
@@ -32,12 +32,12 @@ public class TestCartServiceImpl implements TestCartService {
             updateQuantity(productId, userId, quantity);
             return;
         }
-       TestCart testCart = new TestCart();
-       testCart.setProductId(productId);
-       testCart.setUserId(userId);
-       testCart.setQuantity(quantity);
-       testCart.setId(temp++);
-       testRepo.save(testCart);
+       CartItem cartItem = new CartItem();
+       cartItem.setProductId(productId);
+       cartItem.setUserId(userId);
+       cartItem.setQuantity(quantity);
+       cartItem.setId(temp++);
+       testRepo.save(cartItem);
 
     }
 
@@ -69,11 +69,22 @@ public class TestCartServiceImpl implements TestCartService {
     @Override
     public boolean updateQuantity(long productId, long userId, int quantity) {
         if(testRepo.findByProductIdAndUserId(productId, userId) != null){
-            TestCart testCart = testRepo.findByProductIdAndUserId(productId, userId);
-            testCart.setQuantity(quantity);
-            testRepo.save(testCart);
+            CartItem cartItem = testRepo.findByProductIdAndUserId(productId, userId);
+            cartItem.setQuantity(quantity);
+            testRepo.save(cartItem);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean deleteCart(long userId) {
+        try{
+            testRepo.deleteAll(testRepo.findByUserId(userId));
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+
     }
 }

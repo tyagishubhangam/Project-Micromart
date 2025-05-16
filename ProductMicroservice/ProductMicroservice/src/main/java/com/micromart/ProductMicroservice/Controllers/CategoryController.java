@@ -17,9 +17,9 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@CrossOrigin
+//@CrossOrigin("http://localhost:5173")
 @RequiredArgsConstructor
-@RequestMapping("/api/micromart")
+@RequestMapping("/api/micromart/product")
 public class CategoryController {
     private final CategoryService categoryService;
 

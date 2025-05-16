@@ -4,11 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.micromart.UserMicroservice.dtos.LoginRequest;
 import com.micromart.UserMicroservice.dtos.LoginResponseDto;
 import com.micromart.UserMicroservice.services.UserService;
+import com.micromart.UserMicroservice.user.User;
 import com.micromart.UserMicroservice.userjwt.JWTService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -17,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-
+@Slf4j
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final  UserService userService;
@@ -37,13 +41,18 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             throws AuthenticationException{
        try{
            LoginRequest loginRequest = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
-        String username = loginRequest.getUsername();
+        String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
-        System.out.println("Attempting to authenticate user: " + username);
-        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
+        System.out.println("Attempting to authenticate user: " + email);
+        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(email, password);
 //        setDetails(request, authRequest);
         return authenticationManager.authenticate(authRequest);
-    } catch (IOException e) {
+    }catch (BadCredentialsException e){
+           logger.error(e.getMessage());
+           throw new BadCredentialsException("Bad credentials");
+//           return null;
+       }
+       catch (IOException e) {
            throw new RuntimeException(e);
        }
     }
@@ -51,7 +60,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     public void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,FilterChain chain, Authentication authResult) throws IOException {
         SecurityContextHolder.getContext().setAuthentication(authResult);
-        Long userId = userService.getUserByUsername(authResult.getName()).getId();
+        System.out.println("Successfully authenticated user: " + authResult.getName());
+        User user = userService.getUserByEmail(authResult.getName());
+        Long userId = userService.getUserByEmail(authResult.getName()).getId();
         String accessToken = jwtService.generateToken(authResult.getName());
         response.addHeader("Authorization", "Bearer " + accessToken);
         response.setStatus(HttpServletResponse.SC_OK);
@@ -59,6 +70,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         loginResponseDto.setMessage("Successfully logged in");
         loginResponseDto.setUserId(userId);
+        loginResponseDto.setEmail(user.getEmail());
+        loginResponseDto.setImage(user.getProfilePicUrl());
         loginResponseDto.setAccessToken(accessToken);
         response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponseDto));
     }
@@ -66,7 +79,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
         LoginResponseDto loginResponseDto = new LoginResponseDto();
-        failed.printStackTrace();
+        log.error(failed.getMessage());
         loginResponseDto.setMessage(failed.getMessage());
         response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponseDto));
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

@@ -18,6 +18,11 @@ public class UserMicroserviceApplication {
 		System.setProperty("GOOGLE_OAUTH_SECRET", dotenv.get("GOOGLE_OAUTH_SECRET"));
 		System.setProperty("GOOGLE_OAUTH_CLIENT_ID", dotenv.get("GOOGLE_OAUTH_CLIENT_ID"));
 		System.setProperty("GOOGLE_CALLBACK_URI", dotenv.get("GOOGLE_CALLBACK_URI"));
+		System.setProperty("CLOUDINARY_API_KEY", dotenv.get("CLOUDINARY_API_KEY"));
+		System.setProperty("CLOUDINARY_API_SECRET", dotenv.get("CLOUDINARY_API_SECRET"));
+		System.setProperty("CLOUDINARY_CLOUD_NAME", dotenv.get("CLOUDINARY_CLOUD_NAME"));
+		System.setProperty(("frontend.url"), dotenv.get("frontend.url"));
+		System.setProperty(("JWT.SECRET_KEY"), dotenv.get("JWT.SECRET_KEY"));
 		SpringApplication.run(UserMicroserviceApplication.class, args);
 	}
 

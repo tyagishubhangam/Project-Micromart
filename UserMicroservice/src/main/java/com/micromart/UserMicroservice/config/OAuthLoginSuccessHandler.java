@@ -1,12 +1,13 @@
 package com.micromart.UserMicroservice.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.micromart.UserMicroservice.dtos.LoginResponseDto;
 import com.micromart.UserMicroservice.services.OAuthUserService;
-import com.micromart.UserMicroservice.user.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -18,19 +19,31 @@ import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
     private final OAuthUserService oAuthUserService;
+    private final ObjectMapper objectMapper = new ObjectMapper(); // Can be injected if needed
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+            throws IOException, ServletException {
 
         OidcUser user = (OidcUser) authentication.getPrincipal();
         Map<String, Object> attributes = user.getAttributes();
         LoginResponseDto loginResponse = oAuthUserService.handleGoogleOauth(attributes);
-//        System.out.println(user.getAttributes().toString());
+
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("message", loginResponse.getMessage());
+        responseBody.put("accessToken", loginResponse.getAccessToken());
+        responseBody.put("userId", loginResponse.getUserId());
+
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("{message:'" + loginResponse.getMessage() + "'\n accessToken:'"+loginResponse.getAccessToken()+"'\n userId:'"+loginResponse.getUserId()+"'}");
+        response.getWriter().write(objectMapper.writeValueAsString(responseBody));
+
+        log.info("Google OAuth login successful for user: {}", attributes.get("email"));
+        clearAuthenticationAttributes(request);
     }
 }

@@ -4,18 +4,17 @@ import com.micromart.ReviewMicroservice.Repositories.ReviewRepo;
 import com.micromart.ReviewMicroservice.Review.ProductReview;
 import com.micromart.ReviewMicroservice.clients.ProductClient;
 import feign.FeignException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 @Service
+@RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewServices{
-    ReviewRepo reviewRepo;
-    ProductClient productClient;
-    public ReviewServiceImpl(ReviewRepo reviewRepo, ProductClient productClient) {
-        this.reviewRepo = reviewRepo;
-        this.productClient = productClient;
-    }
+    private final ReviewRepo reviewRepo;
+    private final ProductClient productClient;
+
 
     @Override
     public boolean addReview(ProductReview productReview) {

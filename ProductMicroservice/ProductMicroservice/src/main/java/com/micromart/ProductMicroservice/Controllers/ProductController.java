@@ -6,18 +6,20 @@ import com.micromart.ProductMicroservice.dto.ProductAddRequest;
 import com.micromart.ProductMicroservice.dto.ProductCard;
 import com.micromart.ProductMicroservice.dto.ProductWithReviewDto;
 import com.micromart.ProductMicroservice.services.cloudinary.CloudinaryService;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
 @EnableWebMvc
 @RestController
-@CrossOrigin
+//@CrossOrigin("http://localhost:5173")
 @RequiredArgsConstructor
 @RequestMapping("/api/micromart/product")
 public class ProductController {
@@ -28,7 +30,11 @@ public class ProductController {
 //    public ProductController(ProductService productService) {
 //        this.productService = productService;
 //    }
-
+    @Hidden
+    @GetMapping("/")
+    public RedirectView redirect() {
+        return new RedirectView("/swagger-ui.html");
+    }
     @PostMapping("/add")
     public ResponseEntity<String> addProduct(@RequestPart ProductAddRequest product, @RequestPart("image") MultipartFile imageFile) throws Exception {
        try{

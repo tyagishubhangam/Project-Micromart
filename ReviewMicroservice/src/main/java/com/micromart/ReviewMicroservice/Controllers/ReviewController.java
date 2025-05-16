@@ -5,6 +5,7 @@ import com.micromart.ReviewMicroservice.ReviewService.ReviewServices;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 
@@ -14,6 +15,11 @@ public class ReviewController {
     ReviewServices reviewServices;
     public ReviewController(ReviewServices reviewServices) {
         this.reviewServices = reviewServices;
+    }
+
+    @GetMapping("/")
+    public RedirectView redirect() {
+        return new RedirectView("/swagger-ui.html");
     }
     @GetMapping("/getAll")
     public ResponseEntity<List<ProductReview>> getAllReviews() {

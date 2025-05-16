@@ -1,11 +1,13 @@
 package com.micromart.UserMicroservice.userjwt;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.micromart.UserMicroservice.services.PrincipalUserService;
 import com.micromart.UserMicroservice.user.UserPrincipal;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +17,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
+@Slf4j
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTService jwtService;
@@ -44,28 +51,45 @@ public class JWTFilter extends OncePerRequestFilter {
                return;
            }
        }
+       try{
+            String authHeader = request.getHeader("Authorization");
+            String jwtToken = null;
+            String username = null;
 
-        String authHeader = request.getHeader("Authorization");
-        String jwtToken = null;
-        String username = null;
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                jwtToken = authHeader.substring(7);
+                username = jwtService.extractUsername(jwtToken);
+            }
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            jwtToken = authHeader.substring(7);
-            username = jwtService.extractUsername(jwtToken);
-        }
-
-        if(username != null)
-        {
-            UserDetails userDetails = applicationContext.getBean(PrincipalUserService.class).loadUserByUsername(username);
-            if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                if(jwtService.validateToken(jwtToken, userDetails)){
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            if(username != null) {
+                UserDetails userDetails = applicationContext.getBean(PrincipalUserService.class).loadUserByUsername(username);
+                if(SecurityContextHolder.getContext().getAuthentication() == null) {
+                    if(jwtService.validateToken(jwtToken, userDetails)){
+                        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    }
                 }
             }
-        }
-        filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response);
+       }catch(Exception e){
+
+           log.error("JWT processing error: {}", e.getMessage());
+
+           response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+           response.setContentType("application/json");
+
+           Map<String, Object> errorResponse = new HashMap<>();
+           errorResponse.put("status", HttpServletResponse.SC_FORBIDDEN);
+           errorResponse.put("error", "Forbidden");
+           errorResponse.put("message", e.getMessage());
+           errorResponse.put("timestamp", new Date());
+
+           ObjectMapper mapper = new ObjectMapper();
+           response.getWriter().write(mapper.writeValueAsString(errorResponse));
+           return;
+       }
+
     }
 
 }

@@ -7,4 +7,5 @@ public interface TestCartService {
     public TestDisplayCart getTestCart(long userId);
     public boolean removeFromCart(long productId, long userId);
     public boolean updateQuantity(long productId, long userId, int quantity);
+    public boolean deleteCart(long userId);
 }

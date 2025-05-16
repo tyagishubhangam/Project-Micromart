@@ -5,11 +5,15 @@ import com.micromart.UserMicroservice.dtos.mappers.SignupRequestMapper;
 import com.micromart.UserMicroservice.repositories.UserRepo;
 import com.micromart.UserMicroservice.user.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -17,14 +21,21 @@ public class UserServiceImpl implements UserService {
     private final SignupRequestMapper signupRequestMapper;
     @Override
     public void registerUser(User user) {
-
-//        User user = signupRequestMapper.mapToUser(signupRequest);
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
-        if(user.getPassword() != null) {
-        user.setPassword(encoder.encode(user.getPassword()));}
-        user.setProvider("LOCAL");
+        try{
+            //        User user = signupRequestMapper.mapToUser(signupRequest);
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+            if(user.getPassword() != null) {
+                user.setPassword(encoder.encode(user.getPassword()));}
+            user.setProvider("LOCAL");
 //        System.out.println(user.getPassword());
-        userRepo.save(user);
+            userRepo.save(user);
+        }catch(DataIntegrityViolationException e){
+            log.error(e.getMessage());
+            throw e;
+
+        }
+
+
     }
 
     @Override

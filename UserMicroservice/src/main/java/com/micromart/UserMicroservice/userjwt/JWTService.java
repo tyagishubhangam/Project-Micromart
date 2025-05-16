@@ -3,6 +3,8 @@ package com.micromart.UserMicroservice.userjwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -15,19 +17,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@Slf4j
 @Service
 public class JWTService {
-    private String secretKey = "";
+    @Value("${JWT.SECRET_KEY}")
+    private String secretKey;
 
     public JWTService() {
-        try {
-            KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-            SecretKey key = keyGen.generateKey();
-            secretKey = Base64.getEncoder().encodeToString(key.getEncoded());
 
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public String generateToken(String userName) {
@@ -37,7 +34,7 @@ public class JWTService {
                 .add(claims)
                 .subject(userName)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + (60 * 600 * 600)))
+                .expiration(new Date(System.currentTimeMillis() + (60*60 * 600 * 600)))
                 .and()
                 .signWith(getKey())
                 .compact();
@@ -70,7 +67,14 @@ public class JWTService {
         return extractExpiration(token).before(new Date());
     }
     public boolean validateToken(String token, UserDetails userDetails) {
-        String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        try{
+            String username = extractUsername(token);
+            return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        }catch(Exception e){
+            log.error(e.getMessage());
+            return false;
+        }
+
+
     }
 }

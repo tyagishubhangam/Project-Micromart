@@ -47,7 +47,8 @@ public class OAuthUserServiceImpl implements OAuthUserService {
         user = userService.getUserByEmail(email);
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         loginResponseDto.setUserId(user.getId());
-//
+        loginResponseDto.setEmail(user.getEmail());
+        loginResponseDto.setImage(user.getProfilePicUrl());
         loginResponseDto.setMessage("Successfully logged in");
         loginResponseDto.setAccessToken(jwtService.generateToken(email));
         return loginResponseDto;

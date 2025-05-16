@@ -3,21 +3,26 @@ package com.micromart.UserMicroservice.controllers;
 import com.micromart.UserMicroservice.dtos.SignupRequest;
 import com.micromart.UserMicroservice.dtos.mappers.SignupRequestMapper;
 import com.micromart.UserMicroservice.services.UserService;
+import com.micromart.UserMicroservice.services.cloudinary.CloudinaryService;
 import com.micromart.UserMicroservice.user.User;
 import com.micromart.UserMicroservice.userjwt.JWTService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/micromart/user")
+//@CrossOrigin
 public class UserController {
     private final UserService userService;
     private final JWTService jwtService;
     private final SignupRequestMapper signupRequestMapper;
+    private final CloudinaryService cloudinaryService;
 
     @GetMapping("/getAll")
     public ResponseEntity<List<User>> getAll() {
@@ -25,9 +30,20 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody SignupRequest signupRequest) {
-        User user = signupRequestMapper.mapToUser(signupRequest);
-        userService.registerUser(user);
+    public ResponseEntity<String> signup(@RequestPart SignupRequest signupRequest, @RequestPart("avatar") MultipartFile file) {
+        try{
+            String imageUrl = cloudinaryService.upload(file);
+            User user = signupRequestMapper.mapToUser(signupRequest);
+            user.setProfilePicUrl(imageUrl);
+            userService.registerUser(user);
+        }catch (DataIntegrityViolationException e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
         return ResponseEntity.ok("User registered successfully");
     }
 
