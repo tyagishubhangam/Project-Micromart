@@ -6,6 +6,7 @@ import com.micromart.UserMicroservice.services.UserService;
 import com.micromart.UserMicroservice.services.cloudinary.CloudinaryService;
 import com.micromart.UserMicroservice.user.User;
 import com.micromart.UserMicroservice.userjwt.JWTService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -48,7 +49,10 @@ public class UserController {
     }
 
     @GetMapping("/get")
-    public ResponseEntity<User> getUser(@RequestParam long id) {
+    public ResponseEntity<User> getUser(HttpServletRequest request) {
+//        System.out.println(request.getHeader("Authorization").substring(7));
+        String accessToken = request.getHeader("Authorization").substring(7);
+        Long id = Long.parseLong(jwtService.extractUserId(accessToken));
         if (userService.getUser(id) != null) {
             return ResponseEntity.ok(userService.getUser(id));
         }

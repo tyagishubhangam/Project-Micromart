@@ -30,8 +30,8 @@ public class OAuthUserServiceImpl implements OAuthUserService {
          family_name=tyagi, iat=2025-02-25T23:39:52Z,
          email=tyagishubhangam0090@gmail.com}*/
         String email = (String) parameters.get("email");
-        User user = new User();
-        if(userService.getUserByEmail(email) == null) {
+        User user = userService.getUserByEmail(email);
+        if(user == null) {
 
             log.info("User with email " + email + " doing signup");
 
@@ -41,16 +41,16 @@ public class OAuthUserServiceImpl implements OAuthUserService {
             user.setUsername(parameters.get("family_name").toString().toLowerCase() + (int)(Math.random()*10000));
             user.setProvider(parameters.get("iss").toString());
             user.setProfilePicUrl(parameters.get("picture").toString());
-            userService.registerUser(user);
+            user = userService.registerUser(user);
 
         }
-        user = userService.getUserByEmail(email);
+
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         loginResponseDto.setUserId(user.getId());
         loginResponseDto.setEmail(user.getEmail());
         loginResponseDto.setImage(user.getProfilePicUrl());
         loginResponseDto.setMessage("Successfully logged in");
-        loginResponseDto.setAccessToken(jwtService.generateToken(email));
+        loginResponseDto.setAccessToken(jwtService.generateToken(email,user.getId().toString()));
         return loginResponseDto;
     }
 }

@@ -19,10 +19,10 @@ public class AuthenticationSuccessListener implements ApplicationListener<Authen
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
         // Log or perform actions upon successful authentication
-        String username = event.getAuthentication().getName();
-        System.out.println("Login successful for user: " + username);
-        String jwtToken = jwtService.generateToken(username);
-        System.out.println("JWT token: " + jwtToken);
+//        String username = event.getAuthentication().getName();
+//        System.out.println("Login successful for user: " + username);
+//        String jwtToken = jwtService.generateToken(username);
+//        System.out.println("JWT token: " + jwtToken);
         // You can also add more logic here, like logging to a database, etc.
     }
 }

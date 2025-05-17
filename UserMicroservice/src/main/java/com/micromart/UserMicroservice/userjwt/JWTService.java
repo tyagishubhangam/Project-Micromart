@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,12 +25,13 @@ public class JWTService {
 
     }
 
-    public String generateToken(String userName) {
+    public String generateToken(String userEmail,String userId) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
         return Jwts.builder()
                 .claims()
                 .add(claims)
-                .subject(userName)
+                .subject(userEmail)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + (60*60 * 600 * 600)))
                 .and()
@@ -57,8 +56,11 @@ public class JWTService {
         return claimsResolver.apply(claims);
     }
 
-    public String extractUsername(String token) {
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+    public String extractUserId(String token) {
+        return extractClaim(token,claims -> claims.get("userId",String.class));
     }
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
@@ -68,7 +70,7 @@ public class JWTService {
     }
     public boolean validateToken(String token, UserDetails userDetails) {
         try{
-            String username = extractUsername(token);
+            String username = extractEmail(token);
             return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
         }catch(Exception e){
             log.error(e.getMessage());

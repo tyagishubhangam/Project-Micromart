@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private final SignupRequestMapper signupRequestMapper;
     @Override
-    public void registerUser(User user) {
+    public User registerUser(User user) {
         try{
             //        User user = signupRequestMapper.mapToUser(signupRequest);
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
                 user.setPassword(encoder.encode(user.getPassword()));}
             user.setProvider("LOCAL");
 //        System.out.println(user.getPassword());
-            userRepo.save(user);
+            return userRepo.save(user);
         }catch(DataIntegrityViolationException e){
             log.error(e.getMessage());
             throw e;

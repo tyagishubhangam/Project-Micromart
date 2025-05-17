@@ -2,7 +2,6 @@ package com.micromart.UserMicroservice.userjwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.micromart.UserMicroservice.services.PrincipalUserService;
-import com.micromart.UserMicroservice.user.UserPrincipal;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,7 +57,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 jwtToken = authHeader.substring(7);
-                username = jwtService.extractUsername(jwtToken);
+                username = jwtService.extractEmail(jwtToken);
             }
 
             if(username != null) {

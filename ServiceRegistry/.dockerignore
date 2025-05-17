@@ -1,0 +1,6 @@
+target/
+!target/ServiceRegistry-0.0.1-SNAPSHOT.jar
+.git/
+.idea/
+*.iml
+.env
