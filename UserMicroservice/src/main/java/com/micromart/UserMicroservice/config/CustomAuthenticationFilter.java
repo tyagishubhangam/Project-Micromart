@@ -3,6 +3,7 @@ package com.micromart.UserMicroservice.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.micromart.UserMicroservice.dtos.LoginRequest;
 import com.micromart.UserMicroservice.dtos.LoginResponseDto;
+import com.micromart.UserMicroservice.dtos.ResponseDto;
 import com.micromart.UserMicroservice.services.UserService;
 import com.micromart.UserMicroservice.user.User;
 import com.micromart.UserMicroservice.userjwt.JWTService;
@@ -48,8 +49,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 //        setDetails(request, authRequest);
         return authenticationManager.authenticate(authRequest);
     }catch (BadCredentialsException e){
-           logger.error(e.getMessage());
-           throw new BadCredentialsException("Bad credentials");
+//           logger.error(e.getMessage());
+           throw new BadCredentialsException("Incorrect Email or Password");
 //           return null;
        }
        catch (IOException e) {
@@ -67,22 +68,32 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         response.addHeader("Authorization", "Bearer " + accessToken);
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
+
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         loginResponseDto.setMessage("Successfully logged in");
         loginResponseDto.setUserId(userId);
         loginResponseDto.setEmail(user.getEmail());
         loginResponseDto.setImage(user.getProfilePicUrl());
         loginResponseDto.setAccessToken(accessToken);
-        response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponseDto));
+        ResponseDto responseDto = ResponseDto.builder()
+                .message("Successfully logged in")
+                .data(loginResponseDto)
+                .build();
+        response.getWriter().write(new ObjectMapper().writeValueAsString(responseDto));
     }
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException {
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         LoginResponseDto loginResponseDto = new LoginResponseDto();
         log.error(failed.getMessage());
         loginResponseDto.setMessage(failed.getMessage());
-        response.getWriter().write(new ObjectMapper().writeValueAsString(loginResponseDto));
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write(new ObjectMapper().writeValueAsString(ResponseDto.builder()
+                        .message(failed.getMessage())
+                        .data(loginResponseDto)
+                .build()));
+
 
     }
 

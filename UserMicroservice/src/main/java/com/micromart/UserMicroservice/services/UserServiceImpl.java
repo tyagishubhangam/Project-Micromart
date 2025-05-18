@@ -1,7 +1,10 @@
 package com.micromart.UserMicroservice.services;
 
 import com.micromart.UserMicroservice.dtos.SignupRequest;
+import com.micromart.UserMicroservice.dtos.UserProfileDto;
+import com.micromart.UserMicroservice.dtos.UserUpdateRequest;
 import com.micromart.UserMicroservice.dtos.mappers.SignupRequestMapper;
+import com.micromart.UserMicroservice.dtos.mappers.UserMapper;
 import com.micromart.UserMicroservice.repositories.UserRepo;
 import com.micromart.UserMicroservice.user.User;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,8 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     private final SignupRequestMapper signupRequestMapper;
+    private final UserMapper userMapper;
+
     @Override
     public User registerUser(User user) {
         try{
@@ -44,8 +49,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(Long id) {
-        return userRepo.findById(id).isPresent() ? userRepo.findById(id).get() : null;
+    public UserProfileDto getUser(Long id) {
+        User userEntity =  userRepo.findById(id).isPresent() ? userRepo.findById(id).get() :  null;
+        if(userEntity == null) {
+            return null;
+        }
+        UserProfileDto userProfileDto = userMapper.toUserProfileDto(userEntity);
+        return userProfileDto;
     }
 
     @Override
@@ -58,8 +68,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        return userRepo.findByUsername(username);
+    public User getUserEntity(Long id) {
+        return userRepo.findById(id).isPresent() ? userRepo.findById(id).get() : null;
     }
 
     @Override
@@ -67,4 +77,30 @@ public class UserServiceImpl implements UserService {
 
         return userRepo.findByEmail(email);
     }
+
+    @Override
+    public User updateUser(Long userId, UserUpdateRequest userUpdateRequest) {
+        User existingUser = userRepo.findById(userId).orElseThrow(()-> new RuntimeException("User not found"));
+        if(userUpdateRequest.getFirstName() != null) {
+            existingUser.setFirstName(userUpdateRequest.getFirstName());
+        }
+        if(userUpdateRequest.getLastName() != null) {
+            existingUser.setLastName(userUpdateRequest.getLastName());
+        }
+        if (userUpdateRequest.getAddress() != null) {
+            existingUser.setAddress(userUpdateRequest.getAddress());
+        }
+        if (userUpdateRequest.getPhoneNumber() != null) {
+            existingUser.setPhone(userUpdateRequest.getPhoneNumber());
+        }
+        if(userUpdateRequest.getAvatarUrl() != null) {
+            existingUser.setProfilePicUrl(userUpdateRequest.getAvatarUrl());
+        }
+        if(userUpdateRequest.getImagePublicId() != null) {
+            existingUser.setImagePublicId(userUpdateRequest.getImagePublicId());
+        }
+        return userRepo.save(existingUser);
+    }
+
+
 }
