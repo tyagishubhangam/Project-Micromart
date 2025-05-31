@@ -15,8 +15,8 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi api() {
         return GroupedOpenApi.builder()
-                .group("Project-Micromart")
-                .pathsToMatch("/api/micromart/user/**")
+                .group("User-Microservice-API")
+                .packagesToScan("com.micromart.UserMicroservice.controllers")
                 .build();
     }
 

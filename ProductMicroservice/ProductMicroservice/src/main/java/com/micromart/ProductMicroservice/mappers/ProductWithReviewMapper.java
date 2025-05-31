@@ -30,7 +30,7 @@ public class ProductWithReviewMapper {
         productWithReviewDto.setImage(product.getImage());
         productWithReviewDto.setCategory(product.getCategory().getCategoryName());
         try{
-        productWithReviewDto.setReviews(reviewClient.getReviews(product.getId()));}
+        productWithReviewDto.setReviews(reviewClient.getReviews(String.valueOf(product.getId())));}
         catch(Exception e){
             log.error(e.getMessage());
             productWithReviewDto.setReviews(new ArrayList<>());

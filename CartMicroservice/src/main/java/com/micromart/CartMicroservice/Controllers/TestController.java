@@ -32,22 +32,22 @@ public class TestController {
 
     //ToDo I have to change the response of every APi to ResponseDto and also @PatchMapping I have to use in some apis here
 
-    @GetMapping("/user/{userId}/getCart")
-    public ResponseEntity<TestDisplayCart> getCart(HttpServletRequest request, @PathVariable("userId") long userId, HttpServletResponse httpServletResponse) throws IOException {
+    @GetMapping("/user/getCart")
+    public ResponseEntity<TestDisplayCart> getCart(HttpServletRequest request, HttpServletResponse httpServletResponse) throws IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String token = null;
-
+        String userId = request.getHeader("userId");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 //            System.out.println(authorizationHeader);
             token = authorizationHeader.substring(7); // Remove "Bearer " prefix
-            System.out.println(token);
+
         }
       try{
-          if(userMicroserviceClient.getUser(userId, "Bearer "+ token) == null){
+          if(userMicroserviceClient.getUser(Long.valueOf(userId), "Bearer "+ token) == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
           }
 
-        return new ResponseEntity<>(testService.getTestCart(userId), HttpStatus.OK);
+        return new ResponseEntity<>(testService.getTestCart(Long.parseLong(userId)), HttpStatus.OK);
       }
       catch(FeignException.NotFound e){
          log.error(e.getMessage());
@@ -63,7 +63,8 @@ public class TestController {
     @PostMapping("/addToCart")
     public ResponseEntity<String> addToCart(HttpServletRequest request, @RequestBody AddToCartRequest addToCartRequest) {
         try {
-            long userId =addToCartRequest.getUserId();
+//            long userId =addToCartRequest.getUserId();
+            String userId = request.getHeader("userId");
             long productId = addToCartRequest.getProductId();
             int quantity = addToCartRequest.getQuantity();
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -74,13 +75,13 @@ public class TestController {
                 token = authorizationHeader.substring(7); // Remove "Bearer " prefix
                 System.out.println(token);
             }
-            if(userMicroserviceClient.getUser(userId, "Bearer "+token) == null){
+            if(userMicroserviceClient.getUser(Long.valueOf(userId), "Bearer "+token) == null){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             if (productMicroserviceClient.getProduct(productId) == null){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            testService.addToCart(productId, userId, quantity);
+            testService.addToCart(productId, Long.parseLong(userId), quantity);
             return new ResponseEntity<>("Product Added successfully", HttpStatus.OK);
         } catch (FeignException.FeignClientException e) {
 //            System.out.println(e.getMessage());
@@ -89,22 +90,23 @@ public class TestController {
         }
     }
 
-    @DeleteMapping("/user/{userId}/delete/product/{productId}")
-    public ResponseEntity<String> deleteProductFromCart(HttpServletRequest request, @PathVariable("userId") long userId, @PathVariable("productId") long productId){
+    @DeleteMapping("/user/delete/product/{productId}")
+    public ResponseEntity<String> deleteProductFromCart(HttpServletRequest request, @PathVariable("productId") long productId){
         try{
+            String userId = request.getHeader("userId");
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
             String token = null;
 
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 token = authorizationHeader.substring(7); // Remove "Bearer " prefix
             }
-            if(userMicroserviceClient.getUser(userId, "Bearer "+token) == null){
+            if(userMicroserviceClient.getUser(Long.valueOf(userId), "Bearer "+token) == null){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             if(productMicroserviceClient.getProduct(productId) == null){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-        if(testService.removeFromCart(productId, userId)){
+        if(testService.removeFromCart(productId, Long.parseLong(userId))){
             return new ResponseEntity<>("Product Deleted successfully", HttpStatus.OK);
         }
         return new ResponseEntity<>("Product Not Found", HttpStatus.NOT_FOUND);
@@ -113,23 +115,24 @@ public class TestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    @PutMapping("/user/{userId}/product/{productId}/updateQuantity/{quantity}")
-    public ResponseEntity<String> updateCart(HttpServletRequest request, @PathVariable("userId") long userId, @PathVariable("productId") long productId, @PathVariable("quantity") int quantity){
+    @PutMapping("/user/product/{productId}/updateQuantity/{quantity}")
+    public ResponseEntity<String> updateCart(HttpServletRequest request, @PathVariable("productId") long productId, @PathVariable("quantity") int quantity){
         try {
+            String userId = request.getHeader("userId");
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
             String token = null;
 
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 token = authorizationHeader.substring(7); // Remove "Bearer " prefix
             }
-            if(userMicroserviceClient.getUser(userId, "Bearer "+token) == null){
+            if(userMicroserviceClient.getUser(Long.valueOf(userId), "Bearer "+token) == null){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             if(productMicroserviceClient.getProduct(productId) == null){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            if(testService.updateQuantity(productId, userId, quantity)){
+            if(testService.updateQuantity(productId, Long.parseLong(userId), quantity)){
             return new ResponseEntity<>("Product Updated scuucessfully", HttpStatus.OK);
             }
             return new ResponseEntity<>("Product Not Found", HttpStatus.NOT_FOUND);
