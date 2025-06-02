@@ -42,6 +42,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 "/swagger-resources/**",
                 "/v3/api-docs",
                 "/api/auth/google",
+                "/api/oauth",
                 "/oauth2"
         };
        for (String uri : permittedUris) {
@@ -58,6 +59,19 @@ public class JWTFilter extends OncePerRequestFilter {
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 jwtToken = authHeader.substring(7);
                 username = jwtService.extractEmail(jwtToken);
+            }else{
+                response.setContentType("application/json");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+                Map<String, Object> errorResponse = new HashMap<>();
+                errorResponse.put("status", HttpServletResponse.SC_UNAUTHORIZED);
+                errorResponse.put("error", "Unauthorized");
+                errorResponse.put("message", "No token found");
+                errorResponse.put("timestamp", new Date());
+
+                ObjectMapper mapper = new ObjectMapper();
+                response.getWriter().write(mapper.writeValueAsString(errorResponse));
+                return;
             }
 
             if(username != null) {
@@ -86,7 +100,7 @@ public class JWTFilter extends OncePerRequestFilter {
 
            ObjectMapper mapper = new ObjectMapper();
            response.getWriter().write(mapper.writeValueAsString(errorResponse));
-           return;
+            return;
        }
 
     }

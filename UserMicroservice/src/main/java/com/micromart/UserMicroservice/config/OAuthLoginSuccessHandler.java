@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -21,6 +22,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+    @Value("${frontend.url}")
+    private String frontendUrl;
 
     private final OAuthUserService oAuthUserService;
     private final ObjectMapper objectMapper = new ObjectMapper(); // Can be injected if needed
@@ -32,11 +35,16 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
         OidcUser user = (OidcUser) authentication.getPrincipal();
         Map<String, Object> attributes = user.getAttributes();
         LoginResponseDto loginResponse = oAuthUserService.handleGoogleOauth(attributes);
+        if(frontendUrl != null) {
+            response.sendRedirect(frontendUrl+"/oauth-success?token="+loginResponse.getAccessToken());
+        }
 
         Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("message", loginResponse.getMessage());
         responseBody.put("accessToken", loginResponse.getAccessToken());
         responseBody.put("userId", loginResponse.getUserId());
+        responseBody.put("email", loginResponse.getEmail());
+        responseBody.put("avatar", loginResponse.getImage());
 
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_OK);

@@ -48,8 +48,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 public class SecurityConfig  {
-    @Value("${frontend.url}")
-    private String frontendUrl;
+
 
     private final OAuthLoginSuccessHandler oAuthLoginSuccessHandler;
     private final PrincipalUserService principalUserService;
@@ -80,6 +79,7 @@ public class SecurityConfig  {
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**",
                                         "/api/auth/google",
+                                        "/api/oauth/**",
                                         "/oauth2/**"
                                             )
                         .permitAll()
