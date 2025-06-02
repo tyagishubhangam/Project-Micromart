@@ -23,7 +23,7 @@ public class ProductReview {
 
     }
 
-    private String userId;
+    private String userFullName;
     private String productId;
     private double rating;
     private String description;

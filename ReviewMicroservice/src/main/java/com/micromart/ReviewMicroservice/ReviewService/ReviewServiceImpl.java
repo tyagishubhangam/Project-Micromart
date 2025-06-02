@@ -22,13 +22,13 @@ public class ReviewServiceImpl implements ReviewServices{
 
 
     @Override
-    public ProductReview addReview(String userId,ReviewRequestDto reviewRequestDto) {
+    public ProductReview addReview(ReviewRequestDto reviewRequestDto) {
         try{
             if(productClient.getProductById(Long.parseLong(reviewRequestDto.getProductId())) == null) {
                 return null;
             }
             ProductReview review = reviewMapper.mapToProductReview(reviewRequestDto);
-            review.setUserId(userId);
+
             return reviewRepo.save(review);
 
         }catch(FeignException.NotFound e){

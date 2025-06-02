@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
 public interface ReviewServices {
-    public ProductReview addReview(String userId,ReviewRequestDto productReview);
+    public ProductReview addReview(ReviewRequestDto productReview);
     public List<ProductReview> getAllReviews();
     public ProductReview getReviewById(String id);
     public List<ProductReview> getReviewsByProductId(String productId);

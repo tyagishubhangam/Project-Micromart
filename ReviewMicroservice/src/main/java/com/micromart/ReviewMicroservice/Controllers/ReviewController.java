@@ -6,6 +6,7 @@ import com.micromart.ReviewMicroservice.dtos.ResponseDto;
 import com.micromart.ReviewMicroservice.dtos.ReviewRequestDto;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/micromart/review")
+@RequiredArgsConstructor
 public class ReviewController {
-    ReviewServices reviewServices;
-    public ReviewController(ReviewServices reviewServices) {
-        this.reviewServices = reviewServices;
-    }
+    private final ReviewServices reviewServices;
     @Hidden
     @GetMapping("/")
     public RedirectView redirect() {
@@ -42,13 +41,9 @@ public class ReviewController {
 
     @PostMapping("/addReview")
     public ResponseEntity<ResponseDto> add(HttpServletRequest request , @RequestBody ReviewRequestDto productReview) {
-        String userId = request.getHeader("userId");
-        if(userId == null) {
-            return new ResponseEntity<>(ResponseDto.builder()
-                    .message("No user id provided")
-                    .build(),HttpStatus.UNAUTHORIZED);
-        }
-        ProductReview review = reviewServices.addReview(userId,productReview);
+
+
+        ProductReview review = reviewServices.addReview(productReview);
         if(review != null) {
             return new ResponseEntity<>(ResponseDto.builder()
                     .data(review)

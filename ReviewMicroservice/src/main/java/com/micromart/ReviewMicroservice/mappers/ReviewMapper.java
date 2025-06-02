@@ -13,6 +13,7 @@ public class ReviewMapper {
         ProductReview review = ProductReview.builder()
                 .productId(productReview.getProductId())
                 .description(productReview.getDescription())
+                .userFullName(productReview.getUserFullName())
                 .rating(productReview.getRating())
                 .build();
     return review;
