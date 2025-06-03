@@ -37,6 +37,7 @@ public class ProductController {
     }
     @PostMapping("/add")
     public ResponseEntity<String> addProduct(@RequestPart ProductAddRequest product, @RequestPart("image") MultipartFile imageFile) throws Exception {
+        System.out.println("Adding product");
        try{
            String imageUrl = cloudinaryService.upload(imageFile);
 
@@ -50,7 +51,7 @@ public class ProductController {
         return ResponseEntity.ok("Product added Successfully");
     }
     @GetMapping("/get/{productId}")
-    public ResponseEntity<ProductWithReviewDto> getProductById(@PathVariable("productId") long id) {
+    public ResponseEntity<ProductWithReviewDto> getProductById(@PathVariable("productId") String id) {
         ProductWithReviewDto product = productService.getProductById(id);
         if (product == null) {
             return ResponseEntity.notFound().build();
@@ -67,7 +68,7 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
     @PostMapping("/delete")
-    public ResponseEntity<String> deleteProduct(@RequestParam long id) {
+    public ResponseEntity<String> deleteProduct(@RequestParam String id) {
         if (productService.deleteProduct(id)) {
             return ResponseEntity.ok("Product deleted Successfully");
         }

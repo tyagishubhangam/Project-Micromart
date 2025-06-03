@@ -14,7 +14,6 @@ import java.util.List;
 public class TestCartServiceImpl implements TestCartService {
     public final TestRepo testRepo;
     public final UserMicroserviceClient userClient;
-    long temp =1L;
 
     private final TestCartMapper testCartMapper;
 
@@ -25,7 +24,7 @@ public class TestCartServiceImpl implements TestCartService {
         this.userClient = userClient;
     }
     @Override
-    public void addToCart(long productId, long userId, int quantity) {
+    public void addToCart(String productId, String userId, int quantity) {
 
 
         if (testRepo.findByProductIdAndUserId(productId, userId) != null) {
@@ -36,13 +35,12 @@ public class TestCartServiceImpl implements TestCartService {
        cartItem.setProductId(productId);
        cartItem.setUserId(userId);
        cartItem.setQuantity(quantity);
-       cartItem.setId(temp++);
        testRepo.save(cartItem);
 
     }
 
     @Override
-    public TestDisplayCart getTestCart(long userId) {
+    public TestDisplayCart getTestCart(String userId) {
         double totalAmount = 0.0;
         TestDisplayCart testDisplayCart = new TestDisplayCart();
         List<ProductInCart> productsInCart = testCartMapper.getAllProductsInCart(userId);
@@ -58,7 +56,7 @@ public class TestCartServiceImpl implements TestCartService {
     }
 
     @Override
-    public boolean removeFromCart(long productId, long userId) {
+    public boolean removeFromCart(String productId, String userId) {
         if(testRepo.findByProductIdAndUserId(productId, userId) != null) {
             testRepo.delete(testRepo.findByProductIdAndUserId(productId, userId));
             return true;
@@ -67,7 +65,7 @@ public class TestCartServiceImpl implements TestCartService {
     }
 
     @Override
-    public boolean updateQuantity(long productId, long userId, int quantity) {
+    public boolean updateQuantity(String productId, String userId, int quantity) {
         if(testRepo.findByProductIdAndUserId(productId, userId) != null){
             CartItem cartItem = testRepo.findByProductIdAndUserId(productId, userId);
             cartItem.setQuantity(quantity);
@@ -78,7 +76,7 @@ public class TestCartServiceImpl implements TestCartService {
     }
 
     @Override
-    public boolean deleteCart(long userId) {
+    public boolean deleteCart(String userId) {
         try{
             testRepo.deleteAll(testRepo.findByUserId(userId));
             return true;

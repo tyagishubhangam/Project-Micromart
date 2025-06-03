@@ -10,10 +10,10 @@ import java.util.List;
 public interface UserService {
     public User registerUser(User user);
     public List<User> getAllUsers();
-    public UserProfileDto getUser(Long id);
-    public boolean deleteUser(Long id);
-    public User getUserEntity(Long id);
+    public UserProfileDto getUser(String id);
+    public boolean deleteUser(String id);
+    public User getUserEntity(String id);
     public User getUserByEmail(String email);
 
-    public User updateUser(Long userId, UserUpdateRequest userUpdateRequest);
+    public User updateUser(String userId, UserUpdateRequest userUpdateRequest);
 }

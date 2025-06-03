@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Data
 @Builder
@@ -14,8 +16,15 @@ import lombok.NoArgsConstructor;
 
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
+
+    @PrePersist
+    public void prePersist(){
+        if (id == null) {
+            id = UUID.randomUUID().toString();
+        }
+    }
+
     private String productName;
     private String productDescription;
 //    TODO: Add Category Name

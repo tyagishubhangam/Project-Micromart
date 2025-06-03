@@ -138,13 +138,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductWithReviewDto getProductById(Long id) {
+    public ProductWithReviewDto getProductById(String id) {
         Optional<Product> prod = productRepo.findById(id);
         return prod.isPresent() ? productWithReviewMapper.mapToDto( prod.get()) : null;
     }
 
     @Override
-    public boolean deleteProduct(Long id) {
+    public boolean deleteProduct(String id) {
         try{
             productRepo.deleteById(id);
             return true;

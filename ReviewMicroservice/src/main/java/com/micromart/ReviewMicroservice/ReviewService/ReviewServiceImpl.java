@@ -24,7 +24,7 @@ public class ReviewServiceImpl implements ReviewServices{
     @Override
     public ProductReview addReview(ReviewRequestDto reviewRequestDto) {
         try{
-            if(productClient.getProductById(Long.parseLong(reviewRequestDto.getProductId())) == null) {
+            if(productClient.getProductById(reviewRequestDto.getProductId()) == null) {
                 return null;
             }
             ProductReview review = reviewMapper.mapToProductReview(reviewRequestDto);

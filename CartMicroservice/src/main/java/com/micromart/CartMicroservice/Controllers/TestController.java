@@ -43,11 +43,11 @@ public class TestController {
 
         }
       try{
-          if(userMicroserviceClient.getUser(Long.valueOf(userId), "Bearer "+ token) == null){
+          if(userMicroserviceClient.getUser(userId, "Bearer "+ token) == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
           }
 
-        return new ResponseEntity<>(testService.getTestCart(Long.parseLong(userId)), HttpStatus.OK);
+        return new ResponseEntity<>(testService.getTestCart(userId), HttpStatus.OK);
       }
       catch(FeignException.NotFound e){
          log.error(e.getMessage());
@@ -65,7 +65,7 @@ public class TestController {
         try {
 //            long userId =addToCartRequest.getUserId();
             String userId = request.getHeader("userId");
-            long productId = addToCartRequest.getProductId();
+            String productId = addToCartRequest.getProductId();
             int quantity = addToCartRequest.getQuantity();
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
             String token = null;
@@ -75,13 +75,13 @@ public class TestController {
                 token = authorizationHeader.substring(7); // Remove "Bearer " prefix
                 System.out.println(token);
             }
-            if(userMicroserviceClient.getUser(Long.valueOf(userId), "Bearer "+token) == null){
+            if(userMicroserviceClient.getUser(userId, "Bearer "+token) == null){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             if (productMicroserviceClient.getProduct(productId) == null){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            testService.addToCart(productId, Long.parseLong(userId), quantity);
+            testService.addToCart(productId, userId, quantity);
             return new ResponseEntity<>("Product Added successfully", HttpStatus.OK);
         } catch (FeignException.FeignClientException e) {
 //            System.out.println(e.getMessage());
@@ -91,7 +91,7 @@ public class TestController {
     }
 
     @DeleteMapping("/user/delete/product/{productId}")
-    public ResponseEntity<String> deleteProductFromCart(HttpServletRequest request, @PathVariable("productId") long productId){
+    public ResponseEntity<String> deleteProductFromCart(HttpServletRequest request, @PathVariable("productId") String productId){
         try{
             String userId = request.getHeader("userId");
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -100,13 +100,13 @@ public class TestController {
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 token = authorizationHeader.substring(7); // Remove "Bearer " prefix
             }
-            if(userMicroserviceClient.getUser(Long.valueOf(userId), "Bearer "+token) == null){
+            if(userMicroserviceClient.getUser(userId, "Bearer "+token) == null){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             if(productMicroserviceClient.getProduct(productId) == null){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-        if(testService.removeFromCart(productId, Long.parseLong(userId))){
+        if(testService.removeFromCart(productId, userId)){
             return new ResponseEntity<>("Product Deleted successfully", HttpStatus.OK);
         }
         return new ResponseEntity<>("Product Not Found", HttpStatus.NOT_FOUND);
@@ -116,7 +116,7 @@ public class TestController {
         }
     }
     @PutMapping("/user/product/{productId}/updateQuantity/{quantity}")
-    public ResponseEntity<String> updateCart(HttpServletRequest request, @PathVariable("productId") long productId, @PathVariable("quantity") int quantity){
+    public ResponseEntity<String> updateCart(HttpServletRequest request, @PathVariable("productId") String productId, @PathVariable("quantity") int quantity){
         try {
             String userId = request.getHeader("userId");
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -125,14 +125,14 @@ public class TestController {
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
                 token = authorizationHeader.substring(7); // Remove "Bearer " prefix
             }
-            if(userMicroserviceClient.getUser(Long.valueOf(userId), "Bearer "+token) == null){
+            if(userMicroserviceClient.getUser(userId, "Bearer "+token) == null){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
             if(productMicroserviceClient.getProduct(productId) == null){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-            if(testService.updateQuantity(productId, Long.parseLong(userId), quantity)){
+            if(testService.updateQuantity(productId, userId, quantity)){
             return new ResponseEntity<>("Product Updated scuucessfully", HttpStatus.OK);
             }
             return new ResponseEntity<>("Product Not Found", HttpStatus.NOT_FOUND);
@@ -146,7 +146,7 @@ public class TestController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<ResponseDto> deleteCart(String userId){
-        boolean res = testService.deleteCart(Long.parseLong(userId));
+        boolean res = testService.deleteCart(userId);
         if(res){
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Success","Cart Deleted for userId:"+userId));
         }

@@ -17,7 +17,7 @@ public class TestCartMapper {
     public final TestRepo testRepo;
     public final ProductMicroserviceClient productClient;
 
-    public List<ProductInCart> getAllProductsInCart(long userId) {
+    public List<ProductInCart> getAllProductsInCart(String userId) {
         List<CartItem> userCartItem = testRepo.findByUserId(userId);
         List<ProductInCart> myProductsInCart = new ArrayList<>();
         try {

@@ -1,10 +1,9 @@
 package com.micromart.CartMicroservice.Cart;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.UUID;
 
 @Data
 @Entity
@@ -15,19 +14,18 @@ import lombok.Data;
 
 public class CartItem {
     @Id
-    private long id;
-    private long productId;
+    private String id;
+    @PrePersist
+    public void prePersist() {
+        if (id == null) {
+            id = UUID.randomUUID().toString();
+        }
+    }
+    private String productId;
     private int quantity;
-    private long userId;
+    private String userId;
 
-    public CartItem(long id, long productId, int quantity, long userId) {
-        this.id = id;
-        this.productId = productId;
-        this.quantity = quantity;
-        this.userId = userId;
-    }
 
-    public CartItem() {
-    }
+
 
 }

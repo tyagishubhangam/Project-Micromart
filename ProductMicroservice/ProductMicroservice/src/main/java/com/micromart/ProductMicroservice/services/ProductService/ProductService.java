@@ -12,8 +12,8 @@ import java.util.Optional;
 public interface ProductService {
     public void addProduct(ProductAddRequest product);
     public List<ProductWithReviewDto> getAllProducts();
-    public ProductWithReviewDto getProductById(Long id);
-    public boolean deleteProduct(Long id);
+    public ProductWithReviewDto getProductById(String id);
+    public boolean deleteProduct(String id);
     public boolean updateProduct(Product product);
     public List<ProductCard> getProductCardsByCategory(String categoryName);
     public List<ProductCard> getAllProductCards();

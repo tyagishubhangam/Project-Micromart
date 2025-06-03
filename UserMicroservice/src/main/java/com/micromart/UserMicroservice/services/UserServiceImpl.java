@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserProfileDto getUser(Long id) {
+    public UserProfileDto getUser(String id) {
         User userEntity =  userRepo.findById(id).isPresent() ? userRepo.findById(id).get() :  null;
         if(userEntity == null) {
             return null;
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean deleteUser(Long id) {
+    public boolean deleteUser(String id) {
          if(userRepo.findById(id).isPresent()){
             userRepo.deleteById(id);
             return true;
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserEntity(Long id) {
+    public User getUserEntity(String id) {
         return userRepo.findById(id).isPresent() ? userRepo.findById(id).get() : null;
     }
 
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(Long userId, UserUpdateRequest userUpdateRequest) {
+    public User updateUser(String userId, UserUpdateRequest userUpdateRequest) {
         User existingUser = userRepo.findById(userId).orElseThrow(()-> new RuntimeException("User not found"));
         if(userUpdateRequest.getFirstName() != null) {
             existingUser.setFirstName(userUpdateRequest.getFirstName());

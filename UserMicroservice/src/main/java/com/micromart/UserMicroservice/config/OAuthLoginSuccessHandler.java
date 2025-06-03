@@ -34,7 +34,9 @@ public class OAuthLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHand
 
         OidcUser user = (OidcUser) authentication.getPrincipal();
         Map<String, Object> attributes = user.getAttributes();
+        System.out.println("attributes->" + attributes);
         LoginResponseDto loginResponse = oAuthUserService.handleGoogleOauth(attributes);
+
         if(frontendUrl != null) {
             response.sendRedirect(frontendUrl+"/oauth-success?token="+loginResponse.getAccessToken());
         }

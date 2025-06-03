@@ -7,7 +7,7 @@ public class ProductAddRequest {
 
     private String productName;
     private String productDescription;
-    private long categoryId;
+    private String categoryId;
     private double price;
     private int quantity;
     private String image;

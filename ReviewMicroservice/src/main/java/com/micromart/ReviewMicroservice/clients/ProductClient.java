@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 public interface ProductClient {
     @GetMapping("/api/micromart/product/get/{productId}")
-    public String getProductById(@PathVariable("productId") long id);
+    public String getProductById(@PathVariable("productId") String id);
 }

@@ -38,7 +38,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @PostMapping("/signup")
+    @PostMapping(path = "/signup",consumes = {"multipart/form-data"})
     public ResponseEntity<String> signup(@RequestPart SignupRequest signupRequest, @RequestPart("avatar") MultipartFile file) {
         try{
             Map<?,?> imageData = cloudinaryService.upload(file);
@@ -63,7 +63,7 @@ public class UserController {
     public ResponseEntity<ResponseDto> getUser(HttpServletRequest request) {
 //        System.out.println(request.getHeader("Authorization").substring(7));
         String accessToken = request.getHeader("Authorization").substring(7);
-        Long id = Long.parseLong(jwtService.extractUserId(accessToken));
+        String id = jwtService.extractUserId(accessToken);
         UserProfileDto userProfileDto = userService.getUser(id);
         if (userProfileDto != null) {
             return ResponseEntity.status(200).body(
@@ -81,7 +81,7 @@ public class UserController {
 
     }
     @DeleteMapping("/delete")
-    public ResponseEntity<String> delete(@RequestParam long id) {
+    public ResponseEntity<String> delete(@RequestParam String id) {
         if(userService.deleteUser(id)) {
             return ResponseEntity.ok("User deleted successfully");
         }
@@ -103,7 +103,7 @@ public class UserController {
 
         try{
             String accessToken = request.getHeader("Authorization").substring(7);
-            Long id = Long.parseLong(jwtService.extractUserId(accessToken));
+            String id = jwtService.extractUserId(accessToken);
             User updatedUser = userService.updateUser(id, userUpdateRequest);
             return ResponseEntity.status(200).body(
                     ResponseDto.builder()
@@ -134,7 +134,7 @@ public class UserController {
         try{
 //            System.out.println("updating avatar");
             String accessToken = request.getHeader("Authorization").substring(7);
-            Long userId = Long.parseLong(jwtService.extractUserId(accessToken));
+            String userId = jwtService.extractUserId(accessToken);
             Map<?,?> imageData = cloudinaryService.upload(file);
             String imageUrl = imageData.get("secure_url").toString();
             String publicId = imageData.get("public_id").toString();

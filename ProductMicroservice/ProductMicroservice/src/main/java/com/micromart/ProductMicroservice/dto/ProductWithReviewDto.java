@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class ProductWithReviewDto {
 
-    private Long id;
+    private String id;
     private String productName;
     private String productDescription;
     private String category;

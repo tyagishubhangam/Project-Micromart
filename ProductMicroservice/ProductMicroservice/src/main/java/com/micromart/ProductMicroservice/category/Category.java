@@ -5,13 +5,20 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Data
 public class Category {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private String id;
+    @PrePersist
+    public void prePersist(){
+        if (id == null) {
+            id = UUID.randomUUID().toString();
+        }
+    }
+
     @Column(unique = true)
     private String categoryName;
     @OneToMany(mappedBy = "category")

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 public class Product {
-    private Long id;
+    private String id;
     private String productName;
     private String productDescription;
 

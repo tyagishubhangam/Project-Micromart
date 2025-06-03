@@ -32,7 +32,7 @@ public class OAuthUserServiceImpl implements OAuthUserService {
         String email = (String) parameters.get("email");
         User user = userService.getUserByEmail(email);
         if(user == null) {
-
+         user = new User();
             log.info("User with email " + email + " doing signup");
 
             user.setEmail(email);
