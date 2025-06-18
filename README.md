@@ -216,11 +216,10 @@ Since your backend is already running (e.g., via IntelliJ), open a **separate te
     npm install
     npm run dev
   ```
-  **⚠️ Important Note**\
-  Ensure that the frontend URL (http://localhost:5173 by default) matches the value of FRONTEND_URL in your backend .env file:
-
-
-  FRONTEND_URL=http://localhost:5173
+  **⚠️ Important Note**
+  >Ensure that the frontend URL (http://localhost:5173 by default) matches the value of FRONTEND_URL in your backend .env file:
+> 
+> FRONTEND_URL=http://localhost:5173
 
   **This is required for:**
 
@@ -244,4 +243,70 @@ http://localhost:5173
 - 🛒 Add items to the cart
 
 - 💳 Proceed to checkout and test PayPal integration (in sandbox mode)
+---
+## 📘 API Documentation (Swagger UI)
+
+Each microservice in Micromart comes with an integrated **Swagger UI** for exploring and testing REST APIs.
+
+Once a microservice is running, you can access its Swagger docs at:
+
+| Microservice         | Swagger URL                           |
+|----------------------|---------------------------------------|
+| Product Service      | http://localhost:8081/swagger-ui.html |
+| User Service         | http://localhost:8087/swagger-ui.html |
+| Cart Service         | http://localhost:8089/swagger-ui.html |
+| Review Service       | http://localhost:8088/swagger-ui.html |
+| Order Service        | http://localhost:8019/swagger-ui.html |
+| Payment Service      | http://localhost:8190/swagger-ui.html |
+
+> You can interact with endpoints directly from these UIs (GET, POST, DELETE, etc.).
+
+> ⚠️ Note: Port numbers above are as default setup done in repository — replace them with your port numbers if you change in your local setup.
+----
+
+
+
+## 🖼️ Screenshots
+
+### 🏠 Homepage
+![Homepage](screenshots/Homepage.png)
+
+### 📦 Product Pages
+![Product Page](screenshots/Productpage1.png)
+
+![Product Page](screenshots/Productpage2.png)
+
+![Product Page](screenshots/Productpage3.png)
+
+### 🔐 Login Page
+![Login Page](screenshots/Loginpage.png)
+
+### Signup Page
+![Signup Page](screenshots/Signuppage.png)
+
+### 📜 Categories Page
+
+![Category Page](screenshots/CategoryPage.png)
+
+### 🛒🛍️ Cart Page
+
+![Cart Page](screenshots/cartpage.png)
+
+### 💳 Payment Page
+
+![Payment Page](screenshots/paymentpage.png)
+
+### 🚚 Orders Page
+
+![Orders Page](screenshots/orderspage.png)
+
+
+
+
+
+
+
+
+### 🧾 Swagger API Docs
+![Swagger UI](assets/swagger.png)
 

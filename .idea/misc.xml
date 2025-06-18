@@ -5,17 +5,17 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/ServiceRegistry/pom.xml" />
+        <option value="$PROJECT_DIR$/OrderMicroservice/pom.xml" />
+        <option value="$PROJECT_DIR$/Gateway-Microservice/pom.xml" />
+        <option value="$PROJECT_DIR$/PaymentMicroservice/pom.xml" />
         <option value="$PROJECT_DIR$/CartMicroservice/pom.xml" />
         <option value="$PROJECT_DIR$/UserMicroservice/pom.xml" />
-        <option value="$PROJECT_DIR$/OrderMicroservice/pom.xml" />
         <option value="$PROJECT_DIR$/ReviewMicroservice/pom.xml" />
-        <option value="$PROJECT_DIR$/PaymentMicroservice/pom.xml" />
         <option value="$PROJECT_DIR$/ProductMicroservice/ProductMicroservice/pom.xml" />
-        <option value="$PROJECT_DIR$/Gateway-Microservice/pom.xml" />
       </list>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_23" default="true" project-jdk-name="openjdk-23" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_23" default="true" project-jdk-name="21" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

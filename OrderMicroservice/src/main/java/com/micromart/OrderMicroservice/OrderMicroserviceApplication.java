@@ -12,7 +12,7 @@ public class OrderMicroserviceApplication {
 	public static void main(String[] args) {
 		String rootDir = System.getProperty("user.dir"); // Will be "UserMicroservice"
 		String envPath = rootDir + "/"; // Go to Project-Micromart
-		System.out.println(envPath);
+		System.out.println("*****************"+envPath);
 		Dotenv dotenv = (Dotenv) Dotenv.configure()
 				.directory(envPath)
 				.filename(".env")// Specify the filename
