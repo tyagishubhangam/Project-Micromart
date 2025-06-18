@@ -12,6 +12,7 @@ public class ProductWithReviewDto {
     private String productName;
     private String productDescription;
     private String category;
+    private double rating;
     private double price;
     private int quantity;
     private String image;

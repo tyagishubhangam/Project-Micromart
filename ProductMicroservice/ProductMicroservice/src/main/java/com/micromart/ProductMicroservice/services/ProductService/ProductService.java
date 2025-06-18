@@ -18,4 +18,5 @@ public interface ProductService {
     public List<ProductCard> getProductCardsByCategory(String categoryName);
     public List<ProductCard> getAllProductCards();
 
+
 }

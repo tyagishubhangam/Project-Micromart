@@ -25,6 +25,7 @@ public class ProductWithReviewMapper {
         productWithReviewDto.setId(product.getId());
         productWithReviewDto.setProductName(product.getProductName());
         productWithReviewDto.setProductDescription(product.getProductDescription());
+        productWithReviewDto.setRating(calculateRating(product.getId()));
         productWithReviewDto.setPrice(product.getPrice());
         productWithReviewDto.setQuantity(product.getQuantity());
         productWithReviewDto.setImage(product.getImage());
@@ -45,5 +46,24 @@ public class ProductWithReviewMapper {
 
         }
         return productWithReviewDtos;
+    }
+
+    public double calculateRating(String productId) {
+        double rating = 0.0;
+        try{
+            if (productId != null) {
+                List<Review> reviews = reviewClient.getReviews(productId);
+                for (Review review : reviews) {
+                    rating += review.getRating();
+                }
+
+                rating = rating / reviews.size();
+            }
+        }catch (Exception e) {
+            log.error(e.getMessage());
+            return 0.0;
+        }
+
+        return rating;
     }
 }

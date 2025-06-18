@@ -28,7 +28,7 @@ import java.util.regex.PatternSyntaxException;
 @Slf4j
 @RequestMapping("/api/micromart/payment")
 public class PaymentController {
-    @Value("${Frontend.URL}")
+    @Value("${frontend.url}")
     String baseReturnURL;
     public final PaymentService adminServices;
 

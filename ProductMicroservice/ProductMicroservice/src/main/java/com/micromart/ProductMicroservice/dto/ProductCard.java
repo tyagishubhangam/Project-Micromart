@@ -6,7 +6,7 @@ import lombok.Data;
 public class ProductCard {
     private String id;
     private String name;
-    private String rating;
+    private double rating;
     private double price;
     private String image;
 }

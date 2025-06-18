@@ -9,8 +9,12 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 public class UserMicroserviceApplication {
 
 	public static void main(String[] args) {
+		String rootDir = System.getProperty("user.dir"); // Will be "UserMicroservice"
+		String envPath = rootDir + "/"; // Go to Project-Micromart
+		System.out.println(envPath);
 		Dotenv dotenv = (Dotenv) Dotenv.configure()
-				.directory("../UserMicroservice")  // Specify the filename
+				.directory(envPath)
+				.filename(".env")// Specify the filename
 				.load();
 		System.setProperty("DATABASE_URL", dotenv.get("DATABASE_URL"));
 		System.setProperty("DATABASE_USERNAME", dotenv.get("DATABASE_USERNAME"));
