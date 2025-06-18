@@ -282,7 +282,7 @@ Once a microservice is running, you can access its Swagger docs at:
 ![Login Page](screenshots/Loginpage.png)
 
 ### Signup Page
-![Signup Page](screenshots/Signuppage.png)
+![Signup Page](screenshots/SignupPage.png)
 
 ### 📜 Categories Page
 
