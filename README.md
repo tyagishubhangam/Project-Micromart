@@ -274,6 +274,8 @@ Once a microservice is running, you can access its Swagger docs at:
 ### 📦 Product Pages
 ![Product Page](screenshots/Productpage1.png)
 
+![Product Page](screenshots/product-detail.png)
+
 ![Product Page](screenshots/Productpage2.png)
 
 ![Product Page](screenshots/Productpage3.png)
@@ -299,6 +301,8 @@ Once a microservice is running, you can access its Swagger docs at:
 ### 🚚 Orders Page
 
 ![Orders Page](screenshots/orderspage.png)
+
+![Orders Page](screenshots/order-summary.png)
 
 
 
