@@ -19,8 +19,8 @@ public class SwaggerConfig implements WebMvcConfigurer {
     @Bean
     public GroupedOpenApi api() {
         return GroupedOpenApi.builder()
-                .group("Cart-Microservice")
-                .pathsToMatch("/api/micromart/cart/**")
+                .group("Cart-Microservice-API")
+                .packagesToScan("com.micromart.CartMicroservice.Controllers")
                 .build();
     }
     @Bean

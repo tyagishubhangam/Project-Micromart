@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "ReviewMicroservice", url = "${ReviewMicroservice.url}")
+@FeignClient(name = "ReviewMicroservice", path = "/api/micromart/review")
 public interface ReviewClient {
     @GetMapping("/getReviews/{productId}")
-    public List<Review> getReviews(@PathVariable("productId") long productId);
+    public List<Review> getReviews(@PathVariable("productId") String productId);
 }

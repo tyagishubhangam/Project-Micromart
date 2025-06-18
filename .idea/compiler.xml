@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="CartMicroservice" />
+        <module name="ProductMicroservice" />
+        <module name="UserMicroservice" />
+        <module name="Gateway-Microservice" />
+        <module name="ServiceRegistry" />
+        <module name="ReviewMicroservice" />
+        <module name="PaymentMicroservice" />
+      </profile>
+      <profile name="Annotation profile for OrderMicroservice" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
+        </processorPath>
+        <module name="OrderMicroservice" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="CartMicroservice" options="-parameters" />
+      <module name="Gateway-Microservice" options="-parameters" />
+      <module name="OrderMicroservice" options="-parameters" />
+      <module name="PaymentMicroservice" options="-parameters" />
+      <module name="ProductMicroservice" options="-parameters" />
+      <module name="ReviewMicroservice" options="-parameters" />
+      <module name="ServiceRegistry" options="-parameters" />
+      <module name="UserMicroservice" options="-parameters" />
+    </option>
+  </component>
+</project>

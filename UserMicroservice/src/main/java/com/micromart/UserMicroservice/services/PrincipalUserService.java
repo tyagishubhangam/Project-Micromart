@@ -18,12 +18,12 @@ public class PrincipalUserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User myUser =  userService.getUserByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User myUser =  userService.getUserByEmail(email);
 
         if (myUser == null) {
-            log.error("User not found with username: " + username);
-            throw new UsernameNotFoundException(username);
+            log.error("User not found with email: " + email);
+            throw new UsernameNotFoundException(email);
         }
         return new UserPrincipal(myUser);
     }

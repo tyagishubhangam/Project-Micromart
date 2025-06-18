@@ -13,12 +13,16 @@ public class SwaggerConfig {
     public GroupedOpenApi api() {
         return GroupedOpenApi.builder()
                 .group("Product-Microservice-API")
-                .pathsToMatch("/api/micromart/product/**")
+                .packagesToScan("com.micromart.ProductMicroservice.Controllers")
                 .build();
     }
 
     @Bean
     public OpenAPI customOpenAPI() {
-        return new OpenAPI().info(new Info().title("Product Microservice").version("1.0"));
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Product Microservice")
+                        .description("Product Microservice Api Documentation")
+                .version("1.0"));
     }
 }

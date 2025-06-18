@@ -1,7 +1,7 @@
 package com.micromart.CartMicroservice.CartService;
 
 
-import com.micromart.CartMicroservice.Cart.TestCart;
+import com.micromart.CartMicroservice.Cart.CartItem;
 import com.micromart.CartMicroservice.Cart.TestDisplayCart;
 import com.micromart.CartMicroservice.Clients.UserMicroserviceClient;
 import com.micromart.CartMicroservice.dtos.ProductInCart;
@@ -14,7 +14,6 @@ import java.util.List;
 public class TestCartServiceImpl implements TestCartService {
     public final TestRepo testRepo;
     public final UserMicroserviceClient userClient;
-    long temp =1L;
 
     private final TestCartMapper testCartMapper;
 
@@ -25,24 +24,23 @@ public class TestCartServiceImpl implements TestCartService {
         this.userClient = userClient;
     }
     @Override
-    public void addToCart(long productId, long userId, int quantity) {
+    public void addToCart(String productId, String userId, int quantity) {
 
 
         if (testRepo.findByProductIdAndUserId(productId, userId) != null) {
             updateQuantity(productId, userId, quantity);
             return;
         }
-       TestCart testCart = new TestCart();
-       testCart.setProductId(productId);
-       testCart.setUserId(userId);
-       testCart.setQuantity(quantity);
-       testCart.setId(temp++);
-       testRepo.save(testCart);
+       CartItem cartItem = new CartItem();
+       cartItem.setProductId(productId);
+       cartItem.setUserId(userId);
+       cartItem.setQuantity(quantity);
+       testRepo.save(cartItem);
 
     }
 
     @Override
-    public TestDisplayCart getTestCart(long userId) {
+    public TestDisplayCart getTestCart(String userId) {
         double totalAmount = 0.0;
         TestDisplayCart testDisplayCart = new TestDisplayCart();
         List<ProductInCart> productsInCart = testCartMapper.getAllProductsInCart(userId);
@@ -58,7 +56,7 @@ public class TestCartServiceImpl implements TestCartService {
     }
 
     @Override
-    public boolean removeFromCart(long productId, long userId) {
+    public boolean removeFromCart(String productId, String userId) {
         if(testRepo.findByProductIdAndUserId(productId, userId) != null) {
             testRepo.delete(testRepo.findByProductIdAndUserId(productId, userId));
             return true;
@@ -67,13 +65,24 @@ public class TestCartServiceImpl implements TestCartService {
     }
 
     @Override
-    public boolean updateQuantity(long productId, long userId, int quantity) {
+    public boolean updateQuantity(String productId, String userId, int quantity) {
         if(testRepo.findByProductIdAndUserId(productId, userId) != null){
-            TestCart testCart = testRepo.findByProductIdAndUserId(productId, userId);
-            testCart.setQuantity(quantity);
-            testRepo.save(testCart);
+            CartItem cartItem = testRepo.findByProductIdAndUserId(productId, userId);
+            cartItem.setQuantity(quantity);
+            testRepo.save(cartItem);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean deleteCart(String userId) {
+        try{
+            testRepo.deleteAll(testRepo.findByUserId(userId));
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+
     }
 }

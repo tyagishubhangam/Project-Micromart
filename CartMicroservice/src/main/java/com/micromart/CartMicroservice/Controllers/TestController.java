@@ -4,38 +4,43 @@ import com.micromart.CartMicroservice.Cart.TestDisplayCart;
 import com.micromart.CartMicroservice.CartService.TestCartService;
 import com.micromart.CartMicroservice.Clients.ProductMicroserviceClient;
 import com.micromart.CartMicroservice.Clients.UserMicroserviceClient;
+import com.micromart.CartMicroservice.dtos.AddToCartRequest;
+import com.micromart.CartMicroservice.dtos.ResponseDto;
 import feign.FeignException;
+import feign.Response;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Base64;
 
+@Slf4j
 @RestController
-@RequestMapping("/api/micromart/cart/user/{userId}")
+@RequestMapping("/api/micromart/cart")
+@RequiredArgsConstructor
 public class TestController {
     public final TestCartService testService;
     private final UserMicroserviceClient userMicroserviceClient;
     private final ProductMicroserviceClient productMicroserviceClient;
 
-    public TestController(TestCartService testService, UserMicroserviceClient userMicroserviceClient, ProductMicroserviceClient productMicroserviceClient) {
-        this.testService = testService;
-        this.userMicroserviceClient = userMicroserviceClient;
-        this.productMicroserviceClient = productMicroserviceClient;
-    }
+    //ToDo I have to change the response of every APi to ResponseDto and also @PatchMapping I have to use in some apis here
 
-    @GetMapping("/getCart")
-    public ResponseEntity<TestDisplayCart> getCart(HttpServletRequest request, @PathVariable("userId") long userId, @RequestHeader("Authorization") String header){
+    @GetMapping("/user/getCart")
+    public ResponseEntity<TestDisplayCart> getCart(HttpServletRequest request, HttpServletResponse httpServletResponse) throws IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String token = null;
-
+        String userId = request.getHeader("userId");
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            System.out.println(authorizationHeader);
+//            System.out.println(authorizationHeader);
             token = authorizationHeader.substring(7); // Remove "Bearer " prefix
-            System.out.println(token);
+
         }
       try{
           if(userMicroserviceClient.getUser(userId, "Bearer "+ token) == null){
@@ -45,20 +50,28 @@ public class TestController {
         return new ResponseEntity<>(testService.getTestCart(userId), HttpStatus.OK);
       }
       catch(FeignException.NotFound e){
-          System.out.println(e);
+         log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
       }catch (FeignException.Unauthorized e){
           return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+      }catch (Exception e){
+          log.error(e.getMessage());
+          httpServletResponse.getWriter().write(e.getMessage());
+          return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
       }
     }
-    @PostMapping("/addToCart/product/{productId}/quantity/{quantity}")
-    public ResponseEntity<String> addToCart(HttpServletRequest request, @PathVariable("userId") long userId, @PathVariable("productId") long productId, @PathVariable("quantity") int quantity) {
+    @PostMapping("/addToCart")
+    public ResponseEntity<String> addToCart(HttpServletRequest request, @RequestBody AddToCartRequest addToCartRequest) {
         try {
+//            long userId =addToCartRequest.getUserId();
+            String userId = request.getHeader("userId");
+            String productId = addToCartRequest.getProductId();
+            int quantity = addToCartRequest.getQuantity();
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
             String token = null;
 
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                System.out.println(authorizationHeader);
+//                System.out.println(authorizationHeader);
                 token = authorizationHeader.substring(7); // Remove "Bearer " prefix
                 System.out.println(token);
             }
@@ -71,14 +84,16 @@ public class TestController {
             testService.addToCart(productId, userId, quantity);
             return new ResponseEntity<>("Product Added successfully", HttpStatus.OK);
         } catch (FeignException.FeignClientException e) {
-            System.out.println(e.getMessage());
+//            System.out.println(e.getMessage());
+            log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @DeleteMapping("/delete/product/{productId}")
-    public ResponseEntity<String> deleteProductFromCart(HttpServletRequest request, @PathVariable("userId") long userId, @PathVariable("productId") long productId){
+    @DeleteMapping("/user/delete/product/{productId}")
+    public ResponseEntity<String> deleteProductFromCart(HttpServletRequest request, @PathVariable("productId") String productId){
         try{
+            String userId = request.getHeader("userId");
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
             String token = null;
 
@@ -100,9 +115,10 @@ public class TestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    @PutMapping("/product/{productId}/updateQuantity/{quantity}")
-    public ResponseEntity<String> updateCart(HttpServletRequest request, @PathVariable("userId") long userId, @PathVariable("productId") long productId, @PathVariable("quantity") int quantity){
+    @PutMapping("/user/product/{productId}/updateQuantity/{quantity}")
+    public ResponseEntity<String> updateCart(HttpServletRequest request, @PathVariable("productId") String productId, @PathVariable("quantity") int quantity){
         try {
+            String userId = request.getHeader("userId");
             String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
             String token = null;
 
@@ -123,8 +139,20 @@ public class TestController {
 
         }
         catch(FeignException.FeignClientException e){
+            log.error(e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<ResponseDto> deleteCart(String userId){
+        boolean res = testService.deleteCart(userId);
+        if(res){
+            return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("Success","Cart Deleted for userId:"+userId));
+        }
+        return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseDto("Error","Cart Not Found for userId:"+userId));
+
+
     }
 
 }

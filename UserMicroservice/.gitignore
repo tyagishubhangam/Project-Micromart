@@ -14,7 +14,7 @@ target/
 .sts4-cache
 .DS_Store
 
-.env
+../.env
 ### IntelliJ IDEA ###
 .idea
 *.iws

@@ -3,41 +3,37 @@ package com.micromart.UserMicroservice.userjwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+@Slf4j
 @Service
 public class JWTService {
-    private String secretKey = "";
+    @Value("${JWT.SECRET_KEY}")
+    private String secretKey;
 
     public JWTService() {
-        try {
-            KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-            SecretKey key = keyGen.generateKey();
-            secretKey = Base64.getEncoder().encodeToString(key.getEncoded());
 
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
     }
 
-    public String generateToken(String userName) {
+    public String generateToken(String userEmail,String userId) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userId", userId);
         return Jwts.builder()
                 .claims()
                 .add(claims)
-                .subject(userName)
+                .subject(userEmail)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + (60 * 600 * 600)))
+                .expiration(new Date(System.currentTimeMillis() + (60*60 * 600 * 600)))
                 .and()
                 .signWith(getKey())
                 .compact();
@@ -60,8 +56,11 @@ public class JWTService {
         return claimsResolver.apply(claims);
     }
 
-    public String extractUsername(String token) {
+    public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+    public String extractUserId(String token) {
+        return extractClaim(token,claims -> claims.get("userId",String.class));
     }
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
@@ -70,7 +69,14 @@ public class JWTService {
         return extractExpiration(token).before(new Date());
     }
     public boolean validateToken(String token, UserDetails userDetails) {
-        String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        try{
+            String username = extractEmail(token);
+            return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        }catch(Exception e){
+            log.error(e.getMessage());
+            return false;
+        }
+
+
     }
 }

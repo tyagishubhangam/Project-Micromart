@@ -13,12 +13,12 @@ public class SwaggerConfig {
     public GroupedOpenApi api() {
         return GroupedOpenApi.builder()
                 .group("Payment-Microservice-API")
-                .pathsToMatch("/api/micromart/payment/**")
+                .packagesToScan("com.micromart.PaymentMicroservice.controllers")
                 .build();
     }
 
     @Bean
     public OpenAPI customOpenAPI() {
-        return new OpenAPI().info(new Info().title("Payment Microservice").version("1.0"));
+        return new OpenAPI().info(new Info().title("Payment Microservice API").version("1.0"));
     }
 }

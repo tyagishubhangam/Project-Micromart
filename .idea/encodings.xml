@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/CartMicroservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Gateway-Microservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/OrderMicroservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/PaymentMicroservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ProductMicroservice/ProductMicroservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ReviewMicroservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ServiceRegistry/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/UserMicroservice/src/main/java" charset="UTF-8" />
+  </component>
+</project>

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ReviewRepo extends JpaRepository<ProductReview, Long> {
-    public List<ProductReview> findByProductId(long productId);
+public interface ReviewRepo extends JpaRepository<ProductReview, String> {
+    public List<ProductReview> findByProductId(String productId);
 }
