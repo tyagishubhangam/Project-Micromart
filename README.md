@@ -169,7 +169,7 @@ PAYPAL_CLIENT_SECRET=your_paypal_client_secret
 ---
 4. **▶️ Run Microservices**
 
-Each microservice has a main class (e.g., `ProductMicroserviceerviceApplication.java`) annotated with `@SpringBootApplication`.
+Each microservice has a main class (e.g., `ProductMicroserviceApplication.java`) annotated with `@SpringBootApplication`.
 
 To run:
 - Open each microservice module in IntelliJ
